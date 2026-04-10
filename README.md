@@ -164,9 +164,10 @@ No video, vale mostrar:
 
 ## Integrantes
 
-Preencher com:
+- Bianca Medina RA: 842786
+- Bárbara Garcia de Figueiredo  RA: 841308
+- Carlos Edurdo Michelle Marques RA: 842844
 
-- Nome completo dos alunos
-- Matricula dos alunos
-- Link do repositorio no GitHub
+
+- https://github.com/yKdu7z/Projeto-JAVA
 - Link do video de apresentacao
