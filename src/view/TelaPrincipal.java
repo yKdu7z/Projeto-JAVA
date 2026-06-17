@@ -17,6 +17,7 @@ public class TelaPrincipal extends JFrame {
     private final PainelApostas painelApostas;
     private final PainelResultados painelResultados;
     private final PainelClassificacao painelClassificacao;
+    private final PainelBancoDados painelBancoDados;
 
     public TelaPrincipal() {
         this.sistema = new Sistema();
@@ -26,6 +27,7 @@ public class TelaPrincipal extends JFrame {
         this.painelApostas = new PainelApostas(sistema);
         this.painelResultados = new PainelResultados(sistema);
         this.painelClassificacao = new PainelClassificacao(sistema);
+        this.painelBancoDados = new PainelBancoDados(sistema);
 
         setTitle("Sistema de Apostas - Campeonato de Futebol");
         setSize(1200, 700);
@@ -33,18 +35,20 @@ public class TelaPrincipal extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        JPanel menu = new JPanel(new GridLayout(4, 1, 8, 8));
+        JPanel menu = new JPanel(new GridLayout(5, 1, 8, 8));
         menu.setBackground(new Color(20, 30, 50));
 
         JButton btnParticipantes = criarBotao("Grupos e Participantes");
         JButton btnApostas = criarBotao("Clubes, Campeonato e Apostas");
         JButton btnResultados = criarBotao("Resultados");
         JButton btnClassificacao = criarBotao("Classificacao");
+        JButton btnBancoDados = criarBotao("Banco de Dados");
 
         menu.add(btnParticipantes);
         menu.add(btnApostas);
         menu.add(btnResultados);
         menu.add(btnClassificacao);
+        menu.add(btnBancoDados);
 
         add(menu, BorderLayout.WEST);
 
@@ -52,12 +56,14 @@ public class TelaPrincipal extends JFrame {
         painelCentral.add(painelApostas, "apostas");
         painelCentral.add(painelResultados, "resultados");
         painelCentral.add(painelClassificacao, "classificacao");
+        painelCentral.add(painelBancoDados, "banco");
         add(painelCentral, BorderLayout.CENTER);
 
         btnParticipantes.addActionListener(e -> mostrarPainel("participantes"));
         btnApostas.addActionListener(e -> mostrarPainel("apostas"));
         btnResultados.addActionListener(e -> mostrarPainel("resultados"));
         btnClassificacao.addActionListener(e -> mostrarPainel("classificacao"));
+        btnBancoDados.addActionListener(e -> mostrarPainel("banco"));
 
         mostrarPainel("participantes");
     }
@@ -67,6 +73,7 @@ public class TelaPrincipal extends JFrame {
         painelApostas.atualizarDados();
         painelResultados.atualizarDados();
         painelClassificacao.atualizarDados();
+        painelBancoDados.atualizarDados();
         layout.show(painelCentral, nomePainel);
     }
 

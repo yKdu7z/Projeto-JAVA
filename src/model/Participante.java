@@ -32,6 +32,14 @@ public class Participante extends Usuario implements Pontuavel {
         registrarAposta(partida, new Aposta(golsMandante, golsVisitante));
     }
 
+    public void restaurarAposta(Partida partida, Aposta aposta) {
+        if (partida == null || aposta == null) {
+            throw new IllegalArgumentException("Partida e aposta sao obrigatorias.");
+        }
+        apostas.put(partida, aposta);
+        calcularPontuacao();
+    }
+
     @Override
     public int calcularPontuacao() {
         pontuacao = 0;

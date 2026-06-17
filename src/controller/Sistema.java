@@ -16,6 +16,7 @@ public class Sistema {
     private final List<Grupo> grupos;
     private final List<Participante> participantes;
     private final Administrador administrador;
+    private final RepositorioSistema repositorio;
 
     public Sistema() {
         this.clubes = new ArrayList<>();
@@ -23,12 +24,15 @@ public class Sistema {
         this.grupos = new ArrayList<>();
         this.participantes = new ArrayList<>();
         this.administrador = new Administrador("Administrador");
+        this.repositorio = new RepositorioSistema();
+        this.repositorio.carregarDados(clubes, campeonatos, grupos, participantes);
     }
 
     public Clube cadastrarClube(String nome) {
         validarNomeDisponivel(nome, clubes);
         Clube clube = new Clube(nome);
         clubes.add(clube);
+        repositorio.salvarClube(clube);
         return clube;
     }
 
@@ -36,6 +40,7 @@ public class Sistema {
         validarNomeDisponivel(nome, campeonatos);
         Campeonato campeonato = new Campeonato(nome);
         campeonatos.add(campeonato);
+        repositorio.salvarCampeonato(campeonato);
         return campeonato;
     }
 
@@ -44,6 +49,7 @@ public class Sistema {
             throw new IllegalArgumentException("Selecione campeonato e clube.");
         }
         campeonato.adicionarClube(clube);
+        repositorio.vincularClubeAoCampeonato(campeonato, clube);
     }
 
     public Grupo cadastrarGrupo(String nome) {
@@ -53,6 +59,7 @@ public class Sistema {
         validarNomeDisponivel(nome, grupos);
         Grupo grupo = new Grupo(nome);
         grupos.add(grupo);
+        repositorio.salvarGrupo(grupo);
         return grupo;
     }
 
@@ -67,6 +74,7 @@ public class Sistema {
         Participante participante = new Participante(nome);
         grupo.adicionarParticipante(participante);
         participantes.add(participante);
+        repositorio.salvarParticipante(participante);
         return participante;
     }
 
@@ -76,6 +84,7 @@ public class Sistema {
         }
         Partida partida = new Partida(mandante, visitante, dataHora);
         campeonato.registrarPartida(partida);
+        repositorio.salvarPartida(campeonato, partida);
         return partida;
     }
 
@@ -85,6 +94,9 @@ public class Sistema {
         }
         participante.registrarAposta(partida, golsMandante, golsVisitante);
         participante.calcularPontuacao();
+        Aposta aposta = participante.getApostas().get(partida);
+        repositorio.salvarAposta(participante, partida, aposta);
+        repositorio.atualizarPontuacao(participante);
     }
 
     public void registrarResultado(Partida partida, int golsMandante, int golsVisitante) {
@@ -93,11 +105,13 @@ public class Sistema {
         }
         partida.registrarResultado(golsMandante, golsVisitante);
         atualizarPontuacoes();
+        repositorio.salvarResultado(partida);
     }
 
     public void atualizarPontuacoes() {
         for (Participante participante : participantes) {
             participante.calcularPontuacao();
+            repositorio.atualizarPontuacao(participante);
         }
     }
 
@@ -127,6 +141,14 @@ public class Sistema {
 
     public Administrador getAdministrador() {
         return administrador;
+    }
+
+    public String getStatusBancoDados() {
+        return repositorio.getMensagemStatus();
+    }
+
+    public List<String> getEventosBancoDados() {
+        return repositorio.listarEventosRecentes();
     }
 
     public static LocalDateTime parseDataHora(String valor) {
